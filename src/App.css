@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+/* SEARCH BAR CSS */
+.search-form {
+  padding: 5rem 0;
+}
+.search-input {
+  padding: 1rem 3rem;
+  text-align: center;
+}
+
+.submit-butn {
+  padding: 1rem 2rem;
+}
