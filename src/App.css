@@ -13,9 +13,9 @@ p {
 }
 
 
-.App {
+/* .App {
   text-align: center;
-}
+} */
 
 .App-logo {
   height: 40vmin;
@@ -55,6 +55,8 @@ p {
 /* SEARCH BAR CSS */
 .search-form {
   padding: 5rem 0;
+  display: flex;
+  justify-content: center;
 }
 .search-input {
   padding: 1rem 3rem;
@@ -122,6 +124,10 @@ p {
 
 .button {
   margin-left: auto;
+}
+
+.song-name {
+  width: 70%;
 }
 
 /* TRACKLIST */

@@ -8,7 +8,7 @@ const spotifyClientSecret = process.env.REACT_APP_SPOTIFY_CLIENT_SECRET;
 
 function SearchComponent({ details }) {
   //USE STATES
-  const [searchField, setSearchField] = useState('');
+  // const [searchField, setSearchField] = useState('');
   const [playlistTrack, setPlaylistTrack] = useState([]);
   const [token, setToken] = useState('');
   const [tracks, setTracks] = useState([]);
@@ -33,17 +33,6 @@ function SearchComponent({ details }) {
       });
   }, []);
 
-  const filteredSongs =
-    searchField.trim() === ''
-      ? []
-      : details.filter((song) => {
-          return (
-            song.name.toLowerCase().includes(searchField.toLowerCase()) ||
-            song.artist.toLowerCase().includes(searchField.toLowerCase()) ||
-            song.album.toLowerCase().includes(searchField.toLowerCase())
-          );
-        });
-
   function onChange(e) {
     console.log('changing');
   }
@@ -53,7 +42,7 @@ function SearchComponent({ details }) {
     e.preventDefault();
     const values = searchInput.value;
     // console.log(searchInput.value);
-    setSearchField(values);
+    // setSearchField(values);
     console.log(values);
 
     //get request using search to get the artist ID
@@ -65,7 +54,7 @@ function SearchComponent({ details }) {
       },
     };
 
-    var returnedTracks = await fetch(
+    await fetch(
       'https://api.spotify.com/v1/search?q=' + values + '&type=track',
       searchParameters
     )
@@ -85,15 +74,17 @@ function SearchComponent({ details }) {
     parent.style.pointerEvents = 'none';
     // console.log('adding');
 
-    const parentAttr = Number(parent.getAttribute('data-index'));
-    details.filter((track) => {
+    const parentAttr = parent.getAttribute('data-index');
+    console.log(parentAttr);
+    tracks.filter((track) => {
+      console.log(track.id);
       if (track.id !== parentAttr) return false;
       else {
         const newTrack = {
           id: track.id,
           song: track.name,
-          artist: track.artist,
-          album: track.album,
+          artist: track.artists[0].name,
+          album: track.album.album_type,
         };
         console.log(newTrack);
         setPlaylistTrack((prev) => [...prev, newTrack]);
@@ -120,8 +111,18 @@ function SearchComponent({ details }) {
       <div className='bottom-column'>
         <div className='column search-result-wrap'>
           <h2>Results</h2>
-
-          <Track addButnClicked={addToPlayList} filterSongs={filteredSongs} />
+          <div className='result-playlist'>
+            {tracks.map((song) => (
+              <Track
+                key={song.id}
+                id={song.id}
+                name={song.name}
+                artist={song.artists[0].name}
+                album={song.album.album_type}
+                addButnClicked={addToPlayList}
+              />
+            ))}
+          </div>
         </div>
         <Tracklist playlistTrack={playlistTrack} removeItem={removeItem} />
       </div>
