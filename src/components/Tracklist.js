@@ -1,9 +1,14 @@
 import React from 'react';
 
-function Tracklist({ playlistTrack, removeItem }) {
+function Tracklist({
+  playlistTrack,
+  removeItem,
+  submitToSpotify,
+  spotifyLoginHref,
+}) {
   return (
     <div className='column track-result-wrap'>
-      <input className='playlist-name' type='text'></input>
+      <input id='playlist-name' className='playlist-name' type='text'></input>
       <div className='track-inner-column'>
         {playlistTrack.map((track) => (
           <div key={track.id} data-index={track.id} className='result-item'>
@@ -21,7 +26,9 @@ function Tracklist({ playlistTrack, removeItem }) {
           </div>
         ))}
       </div>
-      <button id='spotify-button'>Save to spotify</button>
+      <button id='spotify-button' onClick={submitToSpotify}>
+        Save to spotify
+      </button>
     </div>
   );
 }

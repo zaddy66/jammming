@@ -148,10 +148,44 @@ p {
   padding: 1rem 2rem;
 }
 
+#spotify-login {
+    min-width: 6rem;
+    padding: 20px 8px;
+    text-align: center;
+    background-color: #1db954;
+    color: white;
+    text-decoration: none;
+}
+
 .playlist-name {
   min-height: 4rem;
   background-color: transparent;
   color: white;
   padding: 0.2rem 10px;
   font-size: 2rem;
+}
+
+/* POPUP CSS */ 
+.popup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+.popup-content {
+  position: relative;
+  z-index: 3;
+}
+
+.popupBg {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  z-index: 0;
+  background-color: rgba(0, 0, 0, 0.74);
+  backdrop-filter: blur(20px);
 }
