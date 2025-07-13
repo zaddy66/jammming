@@ -8,7 +8,7 @@ function Track(props) {
         <p className='song-artist'>{props.artist}</p>
         <p className='song-album'>{props.album}</p>
         <button onClick={props.addButnClicked} className='button add-butn'>
-          Add
+          {props.buttonTxt}
         </button>
       </div>
     </div>
