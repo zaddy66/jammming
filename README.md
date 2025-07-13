@@ -1,6 +1,9 @@
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Loopback localhost- (http://127.0.0.1:8000/)
+
+Changing port = '$env:PORT=8000'
 
 ## Available Scripts
 
