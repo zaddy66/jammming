@@ -8,6 +8,7 @@ function AppTest() {
   const [isTokenReady, setIsTokenReady] = useState(false);
   const [searchItems, setSearchItems] = useState([]);
   const [playlistTrack, setPlaylistTrack] = useState([]);
+  const [playlistName, setPlaylistName] = useState('New Playlist');
 
   useEffect(() => {
     spotifyAuth().then(() => {
@@ -25,7 +26,7 @@ function AppTest() {
     }
     console.log(`Searching for: ${term}`);
     const tracks = await Spotify.search(term);
-    console.log(tracks);
+    // console.log(tracks);
     setSearchItems(tracks);
   };
 
@@ -61,8 +62,23 @@ function AppTest() {
 
     trackItem.style.pointerEvents = 'auto';
     playListItem.remove();
-    console.log(trackItem);
+    // console.log(trackItem);
   }
+
+  //CHANGEING PLAYLIST NAME
+  const nameChange = (name) => {
+    setPlaylistName(name);
+  };
+
+  const saveToPlaylist = async () => {
+    const userID = await Spotify.getUserID();
+    console.log(userID);
+    const playlistID = await Spotify.createPlaylist(userID, playlistName);
+    // console.log(playlistID);
+    const trackURIs = playlistTrack.map((track) => track.uri);
+
+    await Spotify.addTracksToPlaylist(playlistID, trackURIs);
+  };
 
   return (
     <>
@@ -73,7 +89,7 @@ function AppTest() {
           <div className='result-playlist'>
             {searchItems.map((item) => (
               <Track
-                // key={item.id}
+                key={`r${item.id}`}
                 uri={item.uri}
                 id={item.id}
                 name={item.name}
@@ -90,11 +106,13 @@ function AppTest() {
             id='playlist-name'
             className='playlist-name'
             type='text'
+            value={playlistName}
+            onChange={(e) => nameChange(e.target.value)}
           ></input>
           <div className='track-inner-column'>
             {playlistTrack.map((item) => (
               <Track
-                // key={item.id}
+                key={`p${item.id}`}
                 uri={item.uri}
                 id={item.id}
                 name={item.name}
@@ -104,6 +122,9 @@ function AppTest() {
                 addButnClicked={removeFromPlaylist}
               />
             ))}
+            <button id='spotify-button' onClick={saveToPlaylist}>
+              Submit button
+            </button>
           </div>
         </div>
       </div>

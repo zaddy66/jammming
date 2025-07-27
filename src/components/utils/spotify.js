@@ -39,28 +39,79 @@ const Spotify = {
       console.error('Error searching for tracks:', err);
     }
   },
+
+  getUserID: async () => {
+    const accessToken = localStorage.getItem('access_token');
+    const apiUrl = `https://api.spotify.com/v1/me`;
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: headers,
+      });
+      if (response.ok) {
+        const jsonResponse = await response.json();
+        return jsonResponse.id;
+      }
+    } catch (err) {
+      console.error('Error fetching the user ID:', err);
+    }
+  },
+  createPlaylist: async (userID, playlistName) => {
+    const accessToken = localStorage.getItem('access_token');
+    const apiUrl = `https://api.spotify.com/v1/users/${userID}/playlists`;
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    };
+    const data = JSON.stringify({
+      name: playlistName,
+      description: 'Custom playlist with jamming',
+    });
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: headers,
+        body: data,
+      });
+      if (response.ok) {
+        const jsonResponse = await response.json();
+        return jsonResponse.id;
+      }
+    } catch (err) {
+      console.error(`couldn't add playlist: ${err}`);
+    }
+  },
+
+  addTracksToPlaylist: async (playlistID, trackURIs) => {
+    const accessToken = localStorage.getItem('access_token');
+    const apiUrl = `https://api.spotify.com/v1/playlists/${playlistID}/tracks`;
+    const headers = {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json',
+    };
+
+    const data = JSON.stringify({
+      uris: trackURIs,
+    });
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers,
+        body: data,
+      });
+      if (response.ok) {
+        console.log('Tracks added to the playlist successfully');
+      }
+    } catch (err) {
+      console.error(`Error adding items to playlist: ${err}`);
+    }
+  },
 };
-//   const hashed = await sha256(Spotify.codeVerifier);
-//   const codeChallenge = base64encode(hashed);
-
-//   // storing in localStorage
-//   window.localStorage.setItem('code_verifier', Spotify.codeVerifier);
-
-//   const params = {
-//     response_type: 'code',
-//     client_id: Spotify.client_id,
-//     scope: Spotify.scopes,
-//     code_challenge_method: 'S256',
-//     code_challenge: codeChallenge,
-//     redirect_uri: Spotify.redirect_URI,
-//   };
-
-//   Spotify.authURL.search = new URLSearchParams(params).toString();
-//   window.location.href = Spotify.authURL.toString();
-
-//   const urlParams = new URLSearchParams(window.location.search);
-//   let code = urlParams.get('code');
-// };
 
 export async function spotifyAuth() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -81,6 +132,7 @@ export async function spotifyAuth() {
   }
   console.log(accessToken);
   if (!accessToken || !isAccessTokenValid()) {
+    console.log('is logged out');
     const hashed = await sha256(Spotify.codeVerifier);
     const codeChallenge = base64encode(hashed);
     const authURL = new URL('https://accounts.spotify.com/authorize');
