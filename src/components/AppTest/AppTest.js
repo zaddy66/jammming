@@ -10,14 +10,26 @@ function AppTest() {
   const [playlistTrack, setPlaylistTrack] = useState([]);
   const [playlistName, setPlaylistName] = useState('New Playlist');
 
+  // useEffect(() => {
+  //   spotifyAuth().then(() => {
+  //     const token = localStorage.getItem('access_token');
+  //     if (token) {
+  //       setIsTokenReady(true);
+  //     }
+  //   });
+  // }, []);
   useEffect(() => {
-    spotifyAuth().then(() => {
-      const token = localStorage.getItem('access_token');
-      if (token) {
-        setIsTokenReady(true);
-      }
-    });
+    const token = localStorage.getItem('access_token');
+    if (token) {
+      setIsTokenReady(true);
+    }
   }, []);
+
+  //SPOTIFY LOGIN BUTTON
+  async function spotifyLogin(e) {
+    e.preventDefault();
+    await spotifyAuth();
+  }
 
   //SEARCH ITEMS
   const search = async (term) => {
@@ -57,7 +69,7 @@ function AppTest() {
     console.log(playListItem);
     const playListItemAttr = playListItem.getAttribute('data-index');
     const trackItem = document.querySelector(
-      `.result-item[data-index='${playListItemAttr}']`
+      `.result-item[data-index='${playListItemAttr}']`,
     );
 
     trackItem.style.pointerEvents = 'auto';
@@ -82,7 +94,14 @@ function AppTest() {
 
   return (
     <>
-      <SearchBar onSearch={search} />
+      <div className='top-column'>
+        <SearchBar onSearch={search} />
+        {!isTokenReady && (
+          <button id='loginButn' onClick={spotifyLogin}>
+            Login to spotify
+          </button>
+        )}
+      </div>
       <div className='bottom-column'>
         <div className='column search-result-wrap'>
           <h2>Results</h2>
